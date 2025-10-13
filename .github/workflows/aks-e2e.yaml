@@ -119,12 +119,21 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
+            # Get kubeconfig (without outputting it)
             KUBECONFIG_CONTENT=$(az aks get-credentials \
               --name "chme2e${{ github.run_id }}" \
               --resource-group "chme2e${{ github.run_id }}" \
               --subscription "$SUBSCRIPTION_ID" \
               --file -)
-            echo "kubeconfig=$(echo "$KUBECONFIG_CONTENT" | base64 -w 0)" >> $GITHUB_OUTPUT
+            
+            # Base64 encode for safe transport
+            KUBECONFIG_B64=$(echo "$KUBECONFIG_CONTENT" | base64 -w 0)
+            
+            # Mask the secret
+            echo "::add-mask::$KUBECONFIG_B64"
+            
+            # Make it available to other steps within this job
+            echo "kubeconfig=$KUBECONFIG_B64" >> $GITHUB_OUTPUT
       
       - name: Set AKS Context
         uses: Azure/k8s-set-context@212a19233d93f03eceaac31ae5a1d1acf650b6ef # v4.0.1
