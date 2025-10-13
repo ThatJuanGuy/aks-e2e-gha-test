@@ -110,7 +110,8 @@ jobs:
               --resource-group "chme2e${{ github.run_id }}" \
               --location "canadacentral" \
               --attach-acr "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/chme2e${{ github.run_id }}/providers/Microsoft.ContainerRegistry/registries/chme2e${{ github.run_id }}" \
-              --subscription "$SUBSCRIPTION_ID"
+              --subscription "$SUBSCRIPTION_ID" \
+              --generate-ssh-keys
       
       - name: Get AKS Credentials
         uses: Azure/CLI@9f7ce6f37c31b777ec6c6b6d1dfe7db79f497956 # v2.2.0
