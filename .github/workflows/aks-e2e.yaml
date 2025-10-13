@@ -85,8 +85,13 @@ jobs:
               --name "chme2e${{ github.run_id }}" \
               --resource-group "chme2e${{ github.run_id }}" \
               --location "canadacentral" \
-              --sku "Basic" \
+              --sku "Standard" \
               --subscription "$SUBSCRIPTION_ID"
+            
+            # Enable anonymous pull access
+            az acr update \
+              --name "chme2e${{ github.run_id }}" \
+              --anonymous-pull-enabled true
 
       - name: Build and Push Image to ACR
         uses: Azure/CLI@9f7ce6f37c31b777ec6c6b6d1dfe7db79f497956 # v2.2.0
