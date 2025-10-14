@@ -111,7 +111,7 @@ jobs:
               --resource-group "chme2e${{ github.run_id }}" \
               --location "canadacentral" \
               --subscription "$SUBSCRIPTION_ID" \
-              --disable-ssh-access
+              --no-ssh-key
 
   deploy_kubernetes_resources:
     name: "Deploy Kubernetes Resources"
