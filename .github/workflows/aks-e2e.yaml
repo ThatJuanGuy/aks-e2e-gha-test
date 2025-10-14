@@ -114,7 +114,6 @@ jobs:
               --name "chme2e${{ github.run_id }}" \
               --resource-group "chme2e${{ github.run_id }}" \
               --location "canadacentral" \
-              --attach-acr "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/chme2e${{ github.run_id }}/providers/Microsoft.ContainerRegistry/registries/chme2e${{ github.run_id }}" \
               --subscription "$SUBSCRIPTION_ID" \
               --generate-ssh-keys
       
