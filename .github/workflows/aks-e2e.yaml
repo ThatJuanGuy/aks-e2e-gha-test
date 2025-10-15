@@ -175,11 +175,26 @@ jobs:
           cluster-name: "chme2e${{ github.run_id }}"
           resource-group: "chme2e${{ github.run_id }}"
       
-      - name: Deploy Kubernetes Resources
+      - name: Generate Kubernetes manifests
         run: |
-          # Deploy using kustomize
+          # Generate raw manifests from kustomize (without image substitution)
           cd manifests/overlays/test
-          kubectl kustomize . | sed "s|image:.*cluster-health-monitor.*|image: chme2e${{ github.run_id }}.azurecr.io/cluster-health-monitor:${{ github.sha }}|g" | kubectl apply -f - --validate=false
+          kubectl kustomize . > /tmp/k8s-manifests.yaml
+          
+          # Verify the generated manifest
+          echo "Generated manifest:"
+          cat /tmp/k8s-manifests.yaml
+      
+      - name: Deploy to AKS
+        uses: Azure/k8s-deploy@6f7c489cecd8da05646259d9fa3daae92e095c7b # v5.0.4
+        with:
+          action: deploy
+          manifests: |
+            /tmp/k8s-manifests.yaml
+          images: | # Override with the image we built and pushed to ACR
+            chme2e${{ github.run_id }}.azurecr.io/cluster-health-monitor:${{ github.sha }}
+          force: true
+          pull-images: false
 
   cleanup:
     name: "Cleanup Resources"
