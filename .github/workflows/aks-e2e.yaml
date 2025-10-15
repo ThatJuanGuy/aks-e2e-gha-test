@@ -163,11 +163,6 @@ jobs:
       AZURE_CORE_OUTPUT: none
       SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-        with:
-          ref: ${{ needs.get_ref.outputs.checkout_ref }}
-      
       - name: Azure Login
         uses: azure/login@6c251865b4e6290e7b78be643ea2d005bc51f69a # v2.1.1
         with:
