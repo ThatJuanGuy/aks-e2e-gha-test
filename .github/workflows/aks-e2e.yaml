@@ -180,12 +180,13 @@ jobs:
       
       - name: Generate Kubernetes manifests
         run: |
-          # Generate raw manifests from kustomize (without image substitution)
+          # Generate raw manifests from kustomize with image substitution
+          # The following Azure/k8s-deploy action does not support substituting full image urls, only tags.
           cd manifests/overlays/test
-          kubectl kustomize . > /tmp/k8s-manifests.yaml
+          kubectl kustomize . | sed "s|image:.*cluster-health-monitor.*|image: chme2e${{ github.run_id }}.azurecr.io/cluster-health-monitor:${{ github.sha }}|g" > /tmp/k8s-manifests.yaml
           
-          # Verify the generated manifest
-          echo "Generated manifest:"
+          # Verify the generated manifest with substituted image
+          echo "Generated manifest with substituted image:"
           cat /tmp/k8s-manifests.yaml
       
       - name: Deploy to AKS
@@ -194,8 +195,6 @@ jobs:
           action: deploy
           manifests: |
             /tmp/k8s-manifests.yaml
-          images: | # Override with the image we built and pushed to ACR
-            chme2e${{ github.run_id }}.azurecr.io/cluster-health-monitor:${{ github.sha }}
           force: true
           pull-images: false
 
