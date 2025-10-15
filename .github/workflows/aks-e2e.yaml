@@ -174,6 +174,9 @@ jobs:
         with:
           cluster-name: "chme2e${{ github.run_id }}"
           resource-group: "chme2e${{ github.run_id }}"
+
+      - name: Convert kubeconfig to use Azure CLI
+        run: kubelogin convert-kubeconfig -l azurecli
       
       - name: Generate Kubernetes manifests
         run: |
