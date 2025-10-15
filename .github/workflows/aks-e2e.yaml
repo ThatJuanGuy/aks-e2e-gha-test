@@ -135,6 +135,7 @@ jobs:
               --resource-group "chme2e${{ github.run_id }}" \
               --location "${{ needs.validate_region.outputs.region }}" \
               --subscription "$SUBSCRIPTION_ID" \
+              --sku "automatic" \
               --no-ssh-key
 
   deploy_kubernetes_resources:
