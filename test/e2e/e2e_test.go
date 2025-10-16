@@ -31,13 +31,7 @@ func beforeSuiteAllProcesses() []byte {
 	}
 	GinkgoWriter.Println("Using kubeconfig:", kubeConfigPath)
 
-	if skipClusterSetup {
-		By("Applying the cluster health monitor deployment")
-		cmd := exec.Command("make", "kind-apply-manifests")
-		output, err := run(cmd)
-		Expect(err).NotTo(HaveOccurred(), "Failed to apply cluster health monitor manifests: %s", string(output))
-		GinkgoWriter.Println(string(output))
-	} else {
+	if !skipClusterSetup {
 		By("Setting up a Kind cluster for E2E")
 		cmd := exec.Command("make", "kind-test-local")
 		output, err := run(cmd)
