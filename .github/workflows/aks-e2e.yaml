@@ -169,7 +169,7 @@ jobs:
   deploy_kubernetes_resources:
     name: "Deploy Kubernetes Resources"
     runs-on: ubuntu-latest
-    needs: [provision_azure]
+    needs: [get_ref, provision_azure]
     permissions:
       id-token: write
       contents: read
