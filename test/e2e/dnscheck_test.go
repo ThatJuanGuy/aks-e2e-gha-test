@@ -147,17 +147,13 @@ var _ = Describe("DNS checker metrics", Ordered, ContinueOnFailure, func() {
 
 	It("should report unhealthy status with timeout for LocalDNS checkers when LocalDNS is unreachable", func() {
 		By("Disabling LocalDNS mock")
-		cmd := exec.Command("make", "kind-disable-localdns-mock")
-		output, err := run(cmd)
-		Expect(err).NotTo(HaveOccurred(), "Failed to disable LocalDNS mock: %s", string(output))
-		GinkgoWriter.Println(string(output))
+		err := disableMockLocalDNS(dynamicClient)
+		Expect(err).NotTo(HaveOccurred(), "Failed to disable LocalDNS mock")
 
 		DeferCleanup(func() {
 			By("Re-enabling LocalDNS mock")
-			cmd := exec.Command("make", "kind-enable-localdns-mock")
-			output, err := run(cmd)
-			Expect(err).NotTo(HaveOccurred(), "Failed to re-enable LocalDNS mock: %s", string(output))
-			GinkgoWriter.Println(string(output))
+			err := enableMockLocalDNS(dynamicClient)
+			Expect(err).NotTo(HaveOccurred(), "Failed to re-enable LocalDNS mock")
 
 			By("Waiting for mock LocalDNS to be available again")
 			Eventually(func() bool {
